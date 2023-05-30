@@ -63,14 +63,16 @@ export class Dict {
         return foundIdx;
     };
 
-    private add = (item: unknown): void => {
+    private add = (item: unknown, force = false): void => {
         const idx = this.indexOf(item, false);
         if (idx === -1 || idx === this.arr.length) {
             this.arr.push(item);
         } else if (idx % 1 !== 0) {
             this.arr.splice(Math.floor(idx + 1), 0, item);
+        } else if (force) {
+            // already in array but replace with new one
+            this.arr.splice(idx, 1, item);
         }
-        // else: do nothing, already in array
     };
 
     private remove = (item: unknown): void => {
@@ -81,11 +83,11 @@ export class Dict {
         this.arr.splice(idx, 1);
     };
 
-    public addItem = (item: unknown | unknown[]): void => {
+    public addItem = (item: unknown | unknown[], force = false): void => {
         if (Array.isArray(item)) {
-            item.forEach(i => this.add(i));
+            item.forEach(i => this.add(i, force));
         } else {
-            this.add(item);
+            this.add(item, force);
         }
     };
 
